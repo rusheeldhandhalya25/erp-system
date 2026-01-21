@@ -1,33 +1,64 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+import axios from "axios";
+
+/* GET products */
+export const fetchProducts = createAsyncThunk(
+  "products/fetchProducts",
+  async () => {
+    const res = await axios.get("http://localhost:5000/api/products");
+    return res.data;
+  }
+);
+
+/* POST product */
+export const addProduct = createAsyncThunk(
+  "products/addProduct",
+  async (productData) => {
+    const res = await axios.post(
+      "http://localhost:5000/api/products",
+      productData
+    );
+    return res.data;
+  }
+);
 
 const productSlice = createSlice({
-    name:"products",
-    initialState:{
-        list:[],
-    },
-    reducers:{
-        addProduct:(state,action) => {
-            state.list.push(action.payload);
-        },
-        removeProduct:(state,action) =>{
-            state.list = state.list.filter(
-                (item) => item.id !== action.payload
-            );
-        },
+  name: "products",
+  initialState: {
+    items: [],
+    loading: false,
+    error: null,
+  },
+  reducers: {},
+  extraReducers: (builder) => {
+    builder
 
-        reduceStock: (state, action) => {
-      const { productId, quantity } = action.payload;
+      // GET
+      .addCase(fetchProducts.pending, (state) => {
+        state.loading = true;
+      })
+      .addCase(fetchProducts.fulfilled, (state, action) => {
+        state.loading = false;
+        state.items = action.payload;
+      })
+      .addCase(fetchProducts.rejected, (state) => {
+        state.loading = false;
+        state.error = "Failed to load products";
+      })
 
-      const product = state.list.find(
-        (item) => item.id === productId
-      );
-
-      if (product) {
-        product.stock -= quantity;
-      }
-    }
-    },
+      // POST
+      .addCase(addProduct.pending, (state) => {
+        state.loading = true;
+      })
+      .addCase(addProduct.fulfilled, (state, action) => {
+        state.loading = false;
+        state.items.push(action.payload); // instant UI update
+      })
+      .addCase(addProduct.rejected, (state) => {
+        state.loading = false;
+        state.error = "Failed to add product";
+      });
+  },
 });
 
-export const { addProduct , removeProduct , reduceStock} = productSlice.actions;
 export default productSlice.reducer;

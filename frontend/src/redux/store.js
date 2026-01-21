@@ -5,8 +5,8 @@ import orderReducer from "./slices/orderSlice";
 const store = configureStore({
   reducer: {
     products: productReducer,
-    orders: orderReducer
-  }
+    orders: orderReducer,
+  },
 });
 
 export default store;
