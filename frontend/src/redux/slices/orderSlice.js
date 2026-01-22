@@ -5,7 +5,7 @@ import axios from "axios";
 export const fetchOrders = createAsyncThunk(
   "orders/fetchOrders",
   async () => {
-    const res = await axios.get("http://localhost:5000/api/orders");
+    const res = await axios.get("http://localhost:5000/api/v1/orders");
     return res.data;
   }
 );
@@ -15,7 +15,7 @@ export const addOrder = createAsyncThunk(
   "orders/addOrder",
   async (orderData) => {
     const res = await axios.post(
-      "http://localhost:5000/api/orders",
+      "http://localhost:5000/api/v1/orders",
       orderData
     );
     return res.data;

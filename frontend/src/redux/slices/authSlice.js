@@ -6,10 +6,11 @@ export const loginUser = createAsyncThunk(
   "auth/login",
   async (data) => {
     const res = await axios.post(
-      "http://localhost:5000/api/auth/login",
+      "http://localhost:5000/api/v1/auth/login",
       data
     );
     localStorage.setItem("token", res.data.token);
+    localStorage.setItem("user",JSON.stringify(res.data.user));
     return res.data.user;
   }
 );
@@ -19,7 +20,7 @@ export const signupUser = createAsyncThunk(
   "auth/signup",
   async (data) => {
     const res = await axios.post(
-      "http://localhost:5000/api/auth/signup",
+      "http://localhost:5000/api/v1/auth/signup",
       data
     );
     return res.data.message;
@@ -48,6 +49,8 @@ const authSlice = createSlice({
       .addCase(loginUser.fulfilled, (state, action) => {
         state.loading = false;
         state.user = action.payload;
+
+        console.log("Logged in user:", action.payload);
       })
       .addCase(loginUser.rejected, (state) => {
         state.loading = false;

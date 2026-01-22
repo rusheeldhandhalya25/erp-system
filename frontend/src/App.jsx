@@ -7,6 +7,7 @@ import Orders from "./pages/Orders";
 import Sidebar from "./components/layout/Sidebar";
 import Login from "./pages/Login";
 import Signup from "./pages/Signup";
+import AdminRoute from "./routes/AdminRoute";
 
 const PrivateRoute = ({ children }) => {
   const user = useSelector((s) => s.auth.user);
@@ -29,8 +30,8 @@ const App = () => {
               <Sidebar />
               <div className="flex-1 p-6">
                 <Routes>
-                  <Route path="/" element={<Dashboard />} />
-                  <Route path="/products" element={<Products />} />
+                  <Route path="/" element={<AdminRoute><Dashboard /></AdminRoute>} />
+                  <Route path="/products" element={<AdminRoute><Products /></AdminRoute>} />
                   <Route path="/orders" element={<Orders />} />
                 </Routes>
               </div>
